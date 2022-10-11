@@ -119,7 +119,7 @@ jobs:
              py_cmd="${py_cmd%-dev}"
          fi
          
-         SYSTEM_PROFILER_CMD="sudo lshw"
+         SYSTEM_PROFILER_CMD="sudo lshw -json"
          SYSTEM_PROFILER_OUT="System Profile Holder"
          
          RELEASE_INFO_CMD="cat /etc/os-release"
