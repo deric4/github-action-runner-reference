@@ -1,7 +1,5 @@
-# NSFW GitHub Action Runner Mess Around
+# GitHub Action Runner Reference
 
-While I hope this guide _is actually_ helpful for developers who are doing real work, this reference guide isn't meant
-to be consumed by or trigger any automation. Its meant for humans. 
 
 Until someone other than my mom thinks this is neat, this will likely just be collection markdown files, images, and Action logs as favor
 to future me. 
