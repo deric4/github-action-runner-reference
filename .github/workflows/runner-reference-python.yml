@@ -1,4 +1,4 @@
-name: nsfw-ghar-mess-around-python
+name: github-action-runner-reference-python
 on:
   workflow_dispatch:
   
@@ -20,8 +20,8 @@ env:
   PY_CMD: python
   
 jobs:
-  print-shit:
-    name: print shit job
+  dump-it-out:
+    name: "${{ matrix.os}} dump out"
     runs-on: ${{ matrix.os }} 
 
     strategy:
@@ -39,7 +39,7 @@ jobs:
           
         python-version:
           #- python
-          - python3
+          - "python3"
           - "3.10"
           - "3.11-dev"
    
