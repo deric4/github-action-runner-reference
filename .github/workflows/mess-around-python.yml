@@ -1,0 +1,272 @@
+name: nsfw-ghar-mess-around-python
+on:
+  workflow_dispatch:
+  
+# remove all permission, just checking whats on the runner  
+permissions: {}
+
+defaults:
+  run:
+    # when the `shell` is explicitly set, the following options are automically applied:
+    #    `set -eo pipefail`
+    # These options are NOT applied by default (https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference)
+    # 
+    # The output of `ps faux` on linux shows that the .bash_profile and .bashrc file is ignored
+    # ps faux ==> /usr/bin/bash --noprofile --norc -e -o pipefail <job script>.sh
+    shell: bash
+
+env:
+  # just for fun
+  PY_CMD: python
+  
+jobs:
+  print-shit:
+    name: print shit job
+    runs-on: ${{ matrix.os }} 
+
+    strategy:
+
+      matrix:
+        os:
+          - macos-10.15  # python => python2.x
+          - macos-11     # python => python2.x
+          - macos-12     # python => python3.x
+          #- ubuntu-18.04 # python => python2.x
+          - ubuntu-20.04 # python => python3.x
+          #- ubuntu-22.04 # python => python3.x
+          #- windows-2019 # python => python3.x
+          #- windows-2022 # python => python3.x
+          
+        python-version:
+          #- python
+          - python3
+          - "3.10"
+          - "3.11-dev"
+   
+    steps:
+     - name: set python command actions/setup-python@v4
+       run: |
+          echo "Starting actions/setup-python"
+          
+          echo ""
+          # these EnvVars are available when the workflow has the appropriate perms
+          # curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq '@base64'
+          
+          # some interesting Git Vars/Config values
+          GIT_TRACE2=1 git var -l
+          # see what happens when checking a repo I don't own
+          GIT_TRACE2=1 git ls-remote --symref https://github.com/dev-sec/cis-dil-benchmark HEAD
+
+          echo "formatting Github Context with jq"
+          jq . <<<$'${{ toJSON(github) }}'
+          
+          echo ""
+          # this encodes the entire json object which means decoding this output shows
+          # the actual secret (not sure how to comment this part out w/o removing the `$`
+          # jq '. | @base64' <<<'{{ toJSON(github) }}'
+          
+          echo ""
+          echo "context: env"
+          jq . <<<$'${{ toJSON(env) }}'
+          
+          echo ""
+          echo "context: secret"
+          jq . <<<$'${{ toJSON(secrets) }}'
+         
+          echo ""
+          echo "context: job"
+          jq . <<<$'${{ toJSON(job) }}'
+          
+          echo ""
+          echo "context: strategy"
+          jq . <<<$'${{ toJSON(strategy) }}'
+        
+       if: matrix.python-version == 'python3'
+       # only do this on 1 run/OS
+       
+       # only run the action on 'python' or 'python3'
+     - name: use setup actions if needed
+       uses: actions/setup-python@v4
+       with:
+         python-version: ${{ matrix.python-version }}
+       if: ${{ !startsWith(matrix.python-version, 'python') }}
+      
+       # this is a fucking mess, but I wanted a pretty summary for each job with the highlevel info
+       # more detailed info can be seen in the job log output.
+       #
+       # abusing the fuck out of heredocs and the $GITHUB_STEP_SUMMARY, if something breaks, its prob this. have fun.
+       # TODO: create a helper script/cli tool to make this less stupid
+       #      I want _all_ the output in the job logs, but only _some_ of the output in GITHUB_ACTION_SUMMARY with proper
+       #      GitHub Flavored Markdown syntax highlighting 
+     - name: generate job summaries in markdown (this is gross)
+       id: python-gross
+       run: |
+         type -a python
+         
+         type -a python3
+                  
+         ls -la $(dirname $GITHUB_STEP_SUMMARY)
+         
+         # use python3.X (meaning use a python version not configured by actions/setup-python@v4)
+         # only using the action/setup-python when `python-version` is either 'python' or 'python3'
+         #
+         # feel like this action makes figuring out random python/env shit even harder in some cases
+         py_cmd='${{ matrix.python-version }}'
+         
+         if [[ "${py_cmd#python}" == $py_cmd ]]
+         then
+             py_cmd="python${py_cmd}"
+             py_cmd="${py_cmd%-dev}"
+         fi
+         
+         SYSTEM_PROFILER_CMD="System Profile CMD"
+         SYSTEM_PROFILER_OUT="System Profile Holder"
+         
+         RELEASE_INFO_CMD="cat /etc/os-release"
+         RELEASE_INFO_OUT="Luckily..."
+         
+         if [[ $RUNNER_OS == macOS ]]
+         then
+         
+           SYSTEM_PROFILER_CMD="system_profiler -detailLevel mini SPHardwareDataType"
+           
+           RELEASE_INFO_CMD="sw_vers"
+         fi
+         
+         SYSTEM_PROFILER_OUT=$($SYSTEM_PROFILER_CMD)
+         
+         RELEASE_INFO_OUT=$($RELEASE_INFO_CMD)
+         
+         
+         cat >> $GITHUB_STEP_SUMMARY <<EOF
+         # ImageOS/ImageVersion: ${ImageOS}/${ImageVersion}
+         ### martrix.python-version: ${{matrix.python-version}}
+         
+         EOF
+        
+         cat >> $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
+         ### System Profile
+         
+         ```console
+         OPEN_FENCE
+         tee -a $GITHUB_STEP_SUMMARY <<EOF
+         $ $RELEASE_INFO_CMD
+         $RELEASE_INFO_OUT
+         
+         $ $SYSTEM_PROFILER_CMD
+         $SYSTEM_PROFILER_OUT
+         EOF
+         
+         tee -a $GITHUB_STEP_SUMMARY <<'CLOSE_FENCE'
+         ```
+         
+         CLOSE_FENCE
+         
+         
+         cat >> $GITHUB_STEP_SUMMARY <<'EOF'
+         ### python version
+         
+         ```console
+         EOF
+         
+         tee -a $GITHUB_STEP_SUMMARY <<EOF
+         # python <3.4 outputs version on stderr, just gonna redirect on all the commands
+         # TIL: https://bugs.python.org/issue18338
+         $ $py_cmd --version 2>&1
+         $($py_cmd --version 2>&1)
+         
+         $ type -a $py_cmd
+         $(type -a "$py_cmd")
+         
+         # on some ubuntu versions
+         $ ls -la /bin/python*
+         $(ls -la /bin/python* 2>&1)
+         
+         $ ls -la /usr/bin/python*
+         $(ls -la /usr/bin/python* 2>&1)
+         
+         $ ls -la /usr/local/bin/python*
+         $(ls -la /usr/local/bin/python* 2>&1)
+         
+         # on macOS
+         $ find /Users/runner/hostedtoolcache -type f -path "**/bin/python*" -print
+         $(find /Users/runner/hostedtoolcache -type f -path "**/bin/python*" -print)
+         EOF
+         
+         tee -a $GITHUB_STEP_SUMMARY <<EOF
+         # check sys.executable
+         # sometimes `python` will point to python2.X
+         $ $py_cmd -c "from __future__ import print_function; import sys; print('{}'.format(sys.executable))" 2>&1
+         $($py_cmd -c "from __future__ import print_function; import sys; print('{}'.format(sys.executable))" 2>&1)
+         
+         # TODO:  add conditional for macOS
+         # came across this anthonywritescode: https://www.youtube.com/watch?v=Kg8s2YV-aFE&list=WL
+         # where he explains that setting SYSTEM_VERSION_COMPAT env var is needed to get the correct platform version
+         # 
+         # This wasn't something I remember seeing locally or when poking around previously on the runners.
+         # Basically trimmed down/combined my other workflows to repro and check.
+         #
+         #   See Also: see https://gist.github.com/deric4/af90cc848c4915df803ce33ab1e5356e
+         #   (some notes reminding me I was too stupid to figure out how/what needed to change for minor python version
+         #   to be scoped in pre-commit virtualenv for python hooks (was having probs with black and developing a custom hook tolint changes
+         #   to a geojson file to enforce right-hand-rule https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6 
+         #   and validating projection conversions. Most of the modules I tested required running with `python3-intel64` on my local M1. Ended up implementing a pure python implementation
+         #   but... I don't really trust it.
+         #   
+         # 
+         # NOTE: 
+         #   as of 10/11/22 (tested on macos-{10.15,11,12} )it looks like this only happens macos-11+ when using a python version setup/managed by
+         #   the actions/setup-python@v4 (maybe prev vers too) action.
+         #   All the runner images have a `python3` commmand already installed
+         
+         $ $py_cmd -c "import platform; print(platform.mac_ver())" 2>&1
+         $($py_cmd -c "import platform; print(platform.mac_ver())" 2>&1)
+         EOF
+         
+         tee -a $GITHUB_STEP_SUMMARY <<'EOF'
+         ```
+         EOF
+         
+         tee -a $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
+         <details>
+         <summary>
+         
+         ### sysconfig output
+         
+         </summary>
+         
+         ```console
+         OPEN_FENCE
+         tee -a $GITHUB_STEP_SUMMARY <<EOF
+         $ $py_cmd -msysconfig
+         $($py_cmd -msysconfig)
+         EOF
+         
+         cat >> $GITHUB_STEP_SUMMARY <<'CLOSE_FENCE'
+         ```
+         
+         </details>
+         CLOSE_FENCE
+         
+         tee -a $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
+         
+         <details>
+         <summary>
+         
+         ### environment variables
+         
+         </summary>
+         
+         ```console
+         OPEN_FENCE
+         
+         tee -a $GITHUB_STEP_SUMMARY <<EOF
+         $ jq -n --sort-keys 'env'
+         $(jq -n --sort-keys 'env')
+         EOF
+         
+         cat >> $GITHUB_STEP_SUMMARY <<'CLOSE_FENCE'
+         ```
+         
+         </details>
+         CLOSE_FENCE
