@@ -20,6 +20,14 @@ Examples:
 * Contents/checksum of well known/common files
 
 
+### You can browse the `GITHUB_ACTIONS_SUMMARIES` for each OS in the [**Actions** Tab](https://github.com/deric4/nsfw-ghar-mess-around/actions/runs/3230724804)
+
+<p align="center">
+  <a href="https://github.com/deric4/nsfw-ghar-mess-around/actions/runs/3230724804">
+  <img src="https://github.com/deric4/blobs/blob/main/gif-ghar-mess-around.gif"/>
+  </a>
+</p>
+
 ## Why
 
 Over the years I've helped **DevSecOpsLeanSREAgileBBQWTF** teams, from small startups to Fortune 100 enterprises design, develop, maintain thousands of CICD pipelines for both Application and Infrastructure-as-Code code bases.
