@@ -151,10 +151,10 @@ jobs:
          OPEN_FENCE
          tee -a $GITHUB_STEP_SUMMARY <<EOF
          $ $RELEASE_INFO_CMD
-         grep -vE  '(processor|memory) *.(None|empty)' <<<$RELEASE_INFO_OUT
+         $RELEASE_INFO_OUT
          
          $ $SYSTEM_PROFILER_CMD
-         $SYSTEM_PROFILER_OUT
+         grep -vE  '(processor|memory) *.(None|empty)' <<<$SYSTEM_PROFILER_OUT
          EOF
          
          tee -a $GITHUB_STEP_SUMMARY <<'CLOSE_FENCE'
