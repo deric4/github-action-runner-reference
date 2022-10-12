@@ -21,7 +21,7 @@ env:
   
 jobs:
   dump-it-out:
-    name: "${{ matrix.os}} dump out"
+    name: "${{ matrix.os}} python-version:${{matrix.python-version}} dump out"
     runs-on: ${{ matrix.os }} 
 
     strategy:
