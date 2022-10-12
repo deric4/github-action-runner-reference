@@ -154,7 +154,7 @@ jobs:
          $RELEASE_INFO_OUT
          
          $ $SYSTEM_PROFILER_CMD
-         grep -vE  '(processor|memory) *.(None|empty)' <<<$SYSTEM_PROFILER_OUT
+         $(echo "$SYSTEM_PROFILER_OUT" | grep -vE  '(processor|memory) *.(None|empty)')
          EOF
          
          tee -a $GITHUB_STEP_SUMMARY <<'CLOSE_FENCE'
