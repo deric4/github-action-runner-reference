@@ -1,0 +1,107 @@
+name: github-action-runner-reference-docker
+on:
+  workflow_dispatch:
+  
+# remove all permission, just checking whats on the runner  
+permissions: {}
+
+defaults:
+  run:
+    # when the `shell` is explicitly set, the following options are automically applied:
+    #    `set -eo pipefail`
+    # These options are NOT applied by default (https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference)
+    # 
+    # The output of `ps faux` on linux shows that the .bash_profile and .bashrc file is ignored
+    # ps faux ==> /usr/bin/bash --noprofile --norc -e -o pipefail <job script>.sh
+    shell: bash
+
+env:
+  # just for fun
+  HELLO: world
+  
+jobs:
+  dump-it-out:
+    name: "${{ matrix.os}} docker dump out"
+    runs-on: ${{ matrix.os }} 
+
+    strategy:
+
+      matrix:
+        os:
+          - ubuntu-22.04
+   
+    steps:
+     - name: do all the docker things
+       run: |
+       
+         # setup QEMU
+         docker run --privileged --rm tonistiigi/binfmt --install all
+         
+         echo ""
+         echo "docker version"
+         docker version
+         
+         echo ""
+         echo "DOCKER IMAGES"
+         docker images
+         
+ 
+         
+         echo ""
+         echo "DOCKER BUILDX ls"
+         docker buildx ls
+         
+         # have to create a docker-container builder
+         echo ""
+         echo "DOCKER BUILDX CREATE"
+         docker buildx create \
+           --use \
+           --name container \
+           --driver-opt network=host \
+           --driver docker-container \
+           --bootstrap
+         
+         # this shows the builder for docker-container has the correct platforms
+         echo ""
+         echo "DOCKER BUILDX LS"
+         docker buildx ls
+         
+         # in order to build multi-arch all at once, you need to push to a registry first
+         # the github actions from docker push to ghcr but i don't want to do that just for quick testing
+         docker run --rm -d -p 5000:5000 --name registry registry:2
+         
+         echo ""
+         echo "DOCKER PS"
+         docker ps -a
+         
+         echo ""
+         echo "DOCKER BUILDX BUILD --platform linux/arm64,linux/arm64"
+         docker buildx build \
+           --tag localhost:5000/deric4/gha-reference \
+           --push \
+           --platform linux/amd64,linux/arm64 . \
+           -f-<<'EOF'
+             FROM debian:latest
+             CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
+         EOF
+         
+         
+         echo ""
+         echo "DOCKER RUN 1 --platform linux/amd64"
+         docker run \
+           --platform linux/amd64 \
+           --rm \
+           localhost:5000/deric4/gha-reference
+         
+         echo "DOCKER INSPECT linux/amd64"  
+         docker image inspect 'localhost:5000/deric4/gha-reference:latest'
+                  
+         echo ""
+         echo "DOCKER RUN 2 --platform linux/arm64"
+         docker run \
+           --platform linux/arm64 \
+           --rm \
+           localhost:5000/deric4/gha-reference
+           
+         echo "DOCKER INSPECT linux/arm64"  
+         docker image inspect 'localhost:5000/deric4/gha-reference:latest'
