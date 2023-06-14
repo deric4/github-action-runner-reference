@@ -107,14 +107,12 @@ jobs:
            --driver-opt network=host \
            --driver docker-container \
            --bootstrap
-         $(
-           docker buildx create \
+         $(docker buildx create \
              --use \
              --name container \
              --driver-opt network=host \
              --driver docker-container \
-             --bootstrap
-         )
+             --bootstrap)
          EOF
          
          tee -a $GITHUB_STEP_SUMMARY <<'CLOSE_FENCE'
@@ -164,9 +162,9 @@ jobs:
                CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
              EOF
          BUILD
-         tee -a $GITHUB_STEP_SUMMARY <<'BUILD'
+         tee -a $GITHUB_STEP_SUMMARY <<BUILD
          $(
-             docker buildx build \
+            docker buildx build \
                --tag localhost:5000/deric4/gha-reference \
                --push \
                --platform linux/amd64,linux/arm64 . \
