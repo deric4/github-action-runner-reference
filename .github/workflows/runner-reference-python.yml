@@ -28,20 +28,19 @@ jobs:
 
       matrix:
         os:
-          - macos-10.15  # python => python2.x
-          - macos-11     # python => python2.x
-          - macos-12     # python => python3.x
-          - ubuntu-18.04 # python => python2.x
+          #- macos-10.15  # python => python2.x
+          #- macos-11     # python => python2.x
+          #- macos-12     # python => python3.x
+          - macos-latest
           - ubuntu-20.04 # python => python3.x
           - ubuntu-22.04 # python => python3.x
-          #- windows-2019 # python => python3.x
-          #- windows-2022 # python => python3.x
+
           
         python-version:
           - python
           - "python3"
-          - "3.10"
-          - "3.11-dev"
+          - "3.9"
+          - "3.12"
    
     steps:
      - name: set python command actions/setup-python@v4
@@ -89,6 +88,7 @@ jobs:
        uses: actions/setup-python@v4
        with:
          python-version: ${{ matrix.python-version }}
+         allow-prereleases: true
        if: ${{ !startsWith(matrix.python-version, 'python') }}
       
        # this is a fucking mess, but I wanted a pretty summary for each job with the highlevel info
