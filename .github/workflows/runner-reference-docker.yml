@@ -81,7 +81,7 @@ jobs:
          ### docker buildx ls num 1
          
          ```console
-         OPEN_FENCE     
+         OPEN_FENCE
  
          tee -a $GITHUB_STEP_SUMMARY <<EOF
          $ docker buildx ls
@@ -98,7 +98,7 @@ jobs:
          ### create a docker-container builder
          
          ```console
-         OPEN_FENCE     
+         OPEN_FENCE
  
          tee -a $GITHUB_STEP_SUMMARY <<EOF
          $ docker buildx create \
@@ -126,7 +126,7 @@ jobs:
          ### docker buildx ls num 2
          
          ```console
-         OPEN_FENCE     
+         OPEN_FENCE
  
          tee -a $GITHUB_STEP_SUMMARY <<EOF
          $ docker buildx ls
@@ -147,22 +147,12 @@ jobs:
          echo "DOCKER PS"
          docker ps -a
          
-         echo ""
-         echo "DOCKER BUILDX BUILD --platform linux/arm64,linux/arm64"
-         docker buildx build \
-           --tag localhost:5000/deric4/gha-reference \
-           --push \
-           --platform linux/amd64,linux/arm64 . \
-           -f-<<'EOF'
-             FROM debian:latest
-             CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
-         EOF
          
          tee -a $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
          ## build multi platform image
          
          ```console
-         OPEN_FENCE     
+         OPEN_FENCE
  
          tee -a $GITHUB_STEP_SUMMARY <<'BUILD'
          $ docker buildx build \
@@ -174,7 +164,7 @@ jobs:
                CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
              EOF
          BUILD
-         tee -a $GITHUB_STEP_SUMMARY <<BUILD
+         tee -a $GITHUB_STEP_SUMMARY <<'BUILD'
          $(
              docker buildx build \
                --tag localhost:5000/deric4/gha-reference \
@@ -223,9 +213,6 @@ jobs:
          
          CLOSE_FENCE
          
-         echo "DOCKER INSPECT linux/amd64"  
-         docker image inspect 'localhost:5000/deric4/gha-reference:latest'
-         
          tee -a $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
          <details>
          <summary>
@@ -236,6 +223,7 @@ jobs:
          
          ```console
          OPEN_FENCE
+         
          tee -a $GITHUB_STEP_SUMMARY <<EOF
          $ docker image inspect 'localhost:5000/deric4/gha-reference:latest'
          $(docker image inspect 'localhost:5000/deric4/gha-reference:latest')
@@ -246,19 +234,11 @@ jobs:
          
          </details>
          CLOSE_FENCE
-                  
-         echo ""
-         echo "DOCKER RUN 2 --platform linux/arm64"
-         docker run \
-           --platform linux/arm64 \
-           --rm \
-           localhost:5000/deric4/gha-reference
-           
-         echo "DOCKER INSPECT linux/arm64"  
-         docker image inspect 'localhost:5000/deric4/gha-reference:latest'
+         
          tee -a $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
          ## docker run linux/amd64
          :note: check workflow file for ommitted previous steps for setting up a local registry
+         
          ```console
          OPEN_FENCE
          
