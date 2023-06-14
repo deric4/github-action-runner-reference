@@ -165,10 +165,10 @@ jobs:
              EOF
          ...
          BUILD
-         
-         tee -a $GITHUB_STEP_SUMMARY 2>&1 <<-BUILD
+         # docker buildx outputs on stderr, so redirect stderr to stdout in the subshell
+         tee -a $GITHUB_STEP_SUMMARY <<-BUILD
          $(
-           docker buildx build \
+           2>&1 docker buildx build \
              --tag localhost:5000/deric4/gha-reference \
              --push \
              --platform linux/amd64,linux/arm64 . \
