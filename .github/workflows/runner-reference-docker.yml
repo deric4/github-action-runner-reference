@@ -158,7 +158,7 @@ jobs:
              --tag localhost:5000/deric4/gha-reference \
              --push \
              --platform linux/amd64,linux/arm64 . \
-             --output plain \
+             --progress plain \
              -f-<<'EOF'
                FROM debian:latest
                CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
@@ -172,7 +172,7 @@ jobs:
              --tag localhost:5000/deric4/gha-reference \
              --push \
              --platform linux/amd64,linux/arm64 . \
-             --output plain \
+             --progress plain \
              -f-<<-'EOF'
          			FROM debian:latest
          			CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
