@@ -116,8 +116,11 @@ jobs:
          
          if [[ "${py_cmd#python}" == $py_cmd ]]
          then
+             echo $py_cmd
              py_cmd="python${py_cmd}"
+             echo $py_cmd
              py_cmd="${py_cmd%-dev}"
+             echo $py_cmd
          fi
          
          SYSTEM_PROFILER_CMD="sudo lshw -short"
@@ -178,6 +181,11 @@ jobs:
          
          $ type -a $py_cmd
          $(type -a "$py_cmd")
+         
+         
+         $ ls -la which '$py_cmd'
+         $(la -la $(which $py_cmd))
+         
          
          # on some ubuntu versions
          $ ls -la /bin/python*
