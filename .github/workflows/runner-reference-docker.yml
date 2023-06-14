@@ -40,10 +40,11 @@ jobs:
          
          cat >> $GITHUB_STEP_SUMMARY <<EOF
          # ImageOS/ImageVersion: ${ImageOS}/${ImageVersion}
+         begin
          
          EOF
         
-         tee -a $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
+         cat >> $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
          ### docker version
          
          ```console
