@@ -177,8 +177,8 @@ jobs:
          tee -a $GITHUB_STEP_SUMMARY <<EOF
          # python <3.4 outputs version on stderr, just gonna redirect on all the commands
          # TIL: https://bugs.python.org/issue18338
-         $ $py_cmd --version 2>&1
-         $($py_cmd --version 2>&1)
+         $ $py_cmd --version --version 2>&1
+         $($py_cmd --version --version 2>&1)
          
          $ type -a $py_cmd
          $(type -a "$py_cmd")
