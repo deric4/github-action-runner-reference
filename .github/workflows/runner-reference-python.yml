@@ -30,8 +30,8 @@ jobs:
         os:
           #- macos-10.15  # python => python2.x
           #- macos-11     # python => python2.x
-          #- macos-12     # python => python3.x
-          - macos-latest
+          - macos-12     # python => python3.x
+          - macos-13
           - ubuntu-20.04 # python => python3.x
           - ubuntu-22.04 # python => python3.x
 
