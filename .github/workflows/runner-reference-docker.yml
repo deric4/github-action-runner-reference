@@ -166,14 +166,14 @@ jobs:
          
          tee -a $GITHUB_STEP_SUMMARY <<-BUILD
          $(
-            docker buildx build \
-            --tag localhost:5000/deric4/gha-reference \
-            --push \
-            --platform linux/amd64,linux/arm64 . \
-            -f-<<-'EOF'
-              FROM debian:latest
-              CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
-            EOF
+           docker buildx build \
+             --tag localhost:5000/deric4/gha-reference \
+             --push \
+             --platform linux/amd64,linux/arm64 . \
+             -f-<<-'EOF'
+         			FROM debian:latest
+         			CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
+         EOF
          )
          BUILD
          
