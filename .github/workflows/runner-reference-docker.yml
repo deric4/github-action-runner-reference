@@ -166,7 +166,7 @@ jobs:
          ...
          BUILD
          
-         tee -a $GITHUB_STEP_SUMMARY <<-BUILD
+         tee -a $GITHUB_STEP_SUMMARY 2>&1 <<-BUILD
          $(
            docker buildx build \
              --tag localhost:5000/deric4/gha-reference \
