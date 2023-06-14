@@ -39,8 +39,24 @@ jobs:
          
          
          cat >> $GITHUB_STEP_SUMMARY <<EOF
-         # ImageOS/ImageVersion: ${ImageOS}/${ImageVersion}
-         begin
+         # Building multi arch docker images w/ Github Actions
+         
+         Demonstration from this discussion that I answered back in 10/2022 
+         describing at a highlevel of the official github actions from Docker
+         do.
+         
+         
+         > How to run a job in a container with architecture emulation? 
+         
+         https://github.com/orgs/community/discussions/38728
+         
+         https://docs.docker.com/build/ci/github-actions/
+         
+         ---
+         
+         Most of the commands are viewable here in the summary section. This is because
+         the job logs expire after X amount of time (90 days?), but anything written to the step summary
+         seems to persist indefinitely.
          
          EOF
         
