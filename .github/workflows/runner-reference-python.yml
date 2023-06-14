@@ -37,9 +37,10 @@ jobs:
 
           
         python-version:
-          - python
+          - "python"
           - "python3"
           - "3.9"
+          - "3.10"
           - "3.12"
    
     steps:
