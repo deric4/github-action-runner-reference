@@ -65,9 +65,9 @@ jobs:
          ### docker images
          
          ```console
-         OPEN_FENCE     
+         OPEN_FENCE
  
-         tee -a $GITHUB_STEP_SUMMARY <<-EOF
+         tee -a $GITHUB_STEP_SUMMARY <<EOF
          $ docker images
          $(docker images)
          EOF
