@@ -151,12 +151,14 @@ jobs:
          
          ```console
          OPEN_FENCE
- 
+         
+         # warning: the actual EOF needs to be tab delimited and line up with the begging of the indentation :sad:
          tee -a $GITHUB_STEP_SUMMARY <<'BUILD'
          $ docker buildx build \
              --tag localhost:5000/deric4/gha-reference \
              --push \
              --platform linux/amd64,linux/arm64 . \
+             --plain \
              -f-<<'EOF'
                FROM debian:latest
                CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
@@ -170,6 +172,7 @@ jobs:
              --tag localhost:5000/deric4/gha-reference \
              --push \
              --platform linux/amd64,linux/arm64 . \
+             --plain \
              -f-<<-'EOF'
          			FROM debian:latest
          			CMD echo "\n\n\tIN CONTAINER\n\tarch: $(dpkg --print-architecture)\n\n"
@@ -182,16 +185,11 @@ jobs:
          
          CLOSE_FENCE
          
-         echo ""
-         echo "DOCKER RUN 1 --platform linux/amd64"
-         docker run \
-           --platform linux/amd64 \
-           --rm \
-           localhost:5000/deric4/gha-reference
+
            
          tee -a $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
          ## docker run linux/amd64
-         :note: check workflow file for ommitted previous steps for setting up a local registry
+         :warning: check workflow file for ommitted previous steps for setting up a local registry
          ```console
          OPEN_FENCE
          
@@ -209,6 +207,8 @@ jobs:
          EOF
          
          tee -a $GITHUB_STEP_SUMMARY <<'CLOSE_FENCE'
+         
+         
          ```
          
          CLOSE_FENCE
@@ -236,15 +236,15 @@ jobs:
          CLOSE_FENCE
          
          tee -a $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
-         ## docker run linux/amd64
-         :note: check workflow file for ommitted previous steps for setting up a local registry
          
+         ## docker run linux/arm64
+         :warning: check workflow file for ommitted previous steps for setting up a local registry
          ```console
          OPEN_FENCE
          
          tee -a $GITHUB_STEP_SUMMARY <<EOF
          $ docker run \
-           --platform linux/amd64 \
+           --platform linux/arm64 \
            --rm \
            localhost:5000/deric4/gha-reference
          $(
@@ -256,11 +256,13 @@ jobs:
          EOF
          
          tee -a $GITHUB_STEP_SUMMARY <<'CLOSE_FENCE'
+         
          ```
          
          CLOSE_FENCE
          
          tee -a $GITHUB_STEP_SUMMARY <<'OPEN_FENCE'
+         
          <details>
          <summary>
          
