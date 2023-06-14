@@ -185,8 +185,8 @@ jobs:
          
          
          $ ls -la which '$py_cmd'
-         py_cmd_path=$(which $py_cmd)
-         $(ls -la $py_cmd_path)
+         py_cmd_path="$(which $py_cmd)"
+         $(ls -la $py_cmd_path 2>&1)
          
          
          # on some ubuntu versions
