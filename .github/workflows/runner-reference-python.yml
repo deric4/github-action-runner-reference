@@ -212,13 +212,10 @@ jobs:
          $ $py_cmd -c "from __future__ import print_function; import sys; print('{}'.format(sys.executable))" 2>&1
          $($py_cmd -c "from __future__ import print_function; import sys; print('{}'.format(sys.executable))" 2>&1)
          
-         # check site
-         $ $py_cmd -c "import site; print(f'{site.USER_BASE}', f'{site.USER_SITE}')" 2>&1
-         $($py_cmd -c "import site; print(f'{site.USER_BASE}', f'{site.USER_SITE}')" 2>&1)
          
          # check venv python3
-         $ $py_cmd -m venv .venv && source .venv/bin/activate; python3 -c "import sys; print(sys.exectubable)" 2>&1
-         $($py_cmd -m venv .venv && source .venv/bin/activate; python3 -c "import sys; print(sys.exectubable)" 2>&1)
+         $ $py_cmd -m venv .venv && source .venv/bin/activate; python3 -c "import sys; print(sys.executable)" 2>&1
+         $($py_cmd -m venv .venv && source .venv/bin/activate; python3 -c "import sys; print(sys.executable)" 2>&1)
          
          # check pip config
          $ $py_cmd -m pip config debug
@@ -226,7 +223,15 @@ jobs:
          
          # check virtual env config
          $ source .venv/bin/activate && python3 -m pip config debug 2>&
-         $(source .venv/bin/activate && pythno3 -m pip config debug 2>&1)
+         $(source .venv/bin/activate && python3 -m pip config debug 2>&1)
+         
+         # check site
+         $ $py_cmd -m site 2>&1
+         $($py_cmd -m site 2>&1)
+         
+         # check venv site
+         $ $py_cmd -m site 2>&1
+         $(source .venv/bin/activate && $py_cmd -m site 2>&1)
          
          
          # TODO:  add conditional for macOS
