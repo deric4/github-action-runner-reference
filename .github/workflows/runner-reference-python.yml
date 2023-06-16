@@ -91,6 +91,8 @@ jobs:
        with:
          python-version: ${{ matrix.python-version }}
          allow-prereleases: true
+         check-latest: true
+         architecture: arm64
        if: ${{ !startsWith(matrix.python-version, 'python') }}
       
        # this is a fucking mess, but I wanted a pretty summary for each job with the highlevel info
