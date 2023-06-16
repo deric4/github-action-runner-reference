@@ -88,11 +88,11 @@ jobs:
        # only run the action on 'python' or 'python3'
      - name: use setup actions if needed
        uses: actions/setup-python@v4
+       id: setup-python
        with:
          python-version: ${{ matrix.python-version }}
          allow-prereleases: true
          check-latest: true
-         architecture: arm64
        if: ${{ !startsWith(matrix.python-version, 'python') }}
       
        # this is a fucking mess, but I wanted a pretty summary for each job with the highlevel info
@@ -214,6 +214,9 @@ jobs:
          $ $py_cmd -c "from __future__ import print_function; import sys; print('{}'.format(sys.executable))" 2>&1
          $($py_cmd -c "from __future__ import print_function; import sys; print('{}'.format(sys.executable))" 2>&1)
          
+         # compare to setup-python step
+         $ ls -la '${{ steps.setup-python.outputs.python-path }}'
+         $(ls -la '${{ steps.setup-python.outputs.python-path }}' 2>&1)
          
          # check venv python3
          $ $py_cmd -m venv .venv && source .venv/bin/activate; python3 -c "import sys; print(sys.executable)" 2>&1
