@@ -222,12 +222,12 @@ jobs:
          $($py_cmd -m venv .venv && source .venv/bin/activate; python3 -c "import sys; print(sys.executable)" 2>&1)
          
          # check pip config
-         $ $py_cmd -m pip debug -v
-         $($py_cmd -m pip debug -v 2>&1)
+         $ $py_cmd -m pip debug
+         $($py_cmd -m pip debug 2>&1)
          
          # check virtual env config
-         $ source .venv/bin/activate && python3 -m pip debug -v 2>&1
-         $(source .venv/bin/activate && python3 -m pip debug -v 2>&1)
+         $ source .venv/bin/activate && python3 -m pip debug 2>&1
+         $(source .venv/bin/activate && python3 -m pip debug 2>&1)
          
          # check site
          $ $py_cmd -m site 2>&1
