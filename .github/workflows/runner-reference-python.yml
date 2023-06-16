@@ -110,7 +110,6 @@ jobs:
          type -a python3
          python3 --version --version 
          
-         python3 -m pip debug -v
          
          ls -la $(dirname $GITHUB_STEP_SUMMARY)
          
