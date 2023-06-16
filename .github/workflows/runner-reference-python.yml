@@ -33,13 +33,13 @@ jobs:
           #- macos-12     # python => python3.x
           - macos-13
           #- ubuntu-20.04 # python => python3.x
-          - ubuntu-22.04 # python => python3.x
+          #- ubuntu-22.04 # python => python3.x
 
           
         python-version:
-          - "python"
-          - "python3"
-          - "3.9"
+          #- "python"
+          #- "python3"
+          #- "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
