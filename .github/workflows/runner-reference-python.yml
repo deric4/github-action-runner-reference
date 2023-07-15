@@ -101,10 +101,21 @@ jobs:
        # abusing the fuck out of heredocs and the $GITHUB_STEP_SUMMARY, if something breaks, its prob this. have fun.
        # TODO: create a helper script/cli tool to make this less stupid
        #      I want _all_ the output in the job logs, but only _some_ of the output in GITHUB_ACTION_SUMMARY with proper
-       #      GitHub Flavored Markdown syntax highlighting 
+       #      GitHub Flavored Markdown syntax highlighting
+       
+     - name: test shell params
+       id: test-shell-param
+       run: |
+         env
+         type -a python
+         
+         type -a python3
+       shell: bash -el {0}
+         
      - name: generate job summaries in markdown (this is gross)
        id: python-gross
        run: |
+         env 
          type -a python
          
          type -a python3
