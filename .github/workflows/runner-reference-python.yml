@@ -107,9 +107,20 @@ jobs:
        id: test-shell-param
        run: |
          env
+         echo ""
+         
+         echo "which python"
+         ls -la $(which python)
+         echo ""
+         
          type -a python
+         echo ""
          
          type -a python3
+         echo ""
+         
+         ls -la /usr/local/bin/python* 2>&1
+         echo ""
        shell: bash -el {0}
          
      - name: generate job summaries in markdown (this is gross)
