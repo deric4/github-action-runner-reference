@@ -184,9 +184,17 @@ jobs:
          $ $py_cmd --version --version 2>&1
          $($py_cmd --version --version 2>&1)
          
+         # python exact command
+         $ python --version --version 2>&1
+         $(python --version --version 2>&1)
+         
+         # matrix version
          $ type -a $py_cmd
          $(type -a "$py_cmd")
          
+         # raw python version
+         $ type -a python
+         $(type -a python)
          
          $ ls -la which '$py_cmd'
          $(export py_cmd_path="$(which $py_cmd)"; ls -la $py_cmd_path 2>&1)
