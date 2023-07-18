@@ -1,9 +1,5 @@
 # GitHub Action Runner Reference
 
-
-Until someone other than my mom thinks this is neat, this will likely just be collection markdown files, images, and Action logs as favor
-to future me. I quit my job as a Platform Enginer back in January 2022 and don't have a real "production" use case for this information, I'm just enjoying kicking over rocks and seeing whats there, so any feedback/suggestions are welcome.
-
 ## Wut
 
 Just a quick, high level reference guide with information about how GitHub Action Runners are configured by default.
