@@ -95,7 +95,7 @@ jobs:
          python-version: ${{ matrix.python-version }}
          allow-prereleases: true
          check-latest: true
-       if: ${{ !endsWith(matrix.python-version, 'python') }}
+       if: ${{ !startsWith(matrix.python-version, 'python') }}
       
        # this is a fucking mess, but I wanted a pretty summary for each job with the highlevel info
        # more detailed info can be seen in the job log output.
