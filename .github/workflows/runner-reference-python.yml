@@ -121,11 +121,11 @@ jobs:
          type -a python3
          echo ""
          
-         ls -la /usr/local/bin/python* 2>&1
-         echo ""
+         #ls -la /usr/local/bin/python* 2>&1
+         #echo ""
          
-         echo "/usr/local/bin/python --version --version"
-         /usr/local/bin/python --version --version 2>&1 || true
+         #echo "/usr/local/bin/python --version --version"
+         #/usr/local/bin/python --version --version 2>&1 || true
        shell: bash -el {0}
          
      - name: generate job summaries in markdown (this is gross)
