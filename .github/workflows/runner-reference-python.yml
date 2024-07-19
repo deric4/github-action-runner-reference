@@ -40,14 +40,14 @@ jobs:
           
         python-version:
           - "python"
-          #- "python3"
+          - "python3"
           #- "3.9"
-          - "3.10"
-          - "3.11"
+          #- "3.10"
+          #- "3.11"
           - "3.12"
    
     steps:
-     - name: set python command actions/setup-python@v4
+     - name: set python command actions/setup-python@v5
        run: |
           echo "Starting actions/setup-python"
           
@@ -89,7 +89,7 @@ jobs:
        
        # only run the action on 'python' or 'python3'
      - name: use setup actions if needed
-       uses: actions/setup-python@v4
+       uses: actions/setup-python@v5
        id: setup-python
        with:
          python-version: ${{ matrix.python-version }}
